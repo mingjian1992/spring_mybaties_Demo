@@ -1,0 +1,27 @@
+/*
+custom css
+*/
+body {
+    font-family: "微软雅黑", Helvetica, Verdana, Arial, sans-serif;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.navbar {
+    margin-bottom: 20px;
+}
+
+table tbody .even {
+    background-color: #eeeeee;
+}
+
+/*  scrollUp Image style */
+#scrollUp {
+    bottom: 20px;
+    right: 20px;
+    height: 38px;  /* Height of image */
+    width: 38px; /* Width of image */
+    background: url(../images/scroll_top.png) no-repeat;
+}
+
+

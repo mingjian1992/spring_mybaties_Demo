@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.andaily.zhishifenzi.infrastructure.mybatis.CommonsRepositoryMyBatis">
+
+    <resultMap type="GeckoFile" id="geckoFileMap">
+        <id property="id" column="id"/>
+        <result property="guid" column="guid"/>
+        <result property="archived" column="archived"/>
+        <result property="createTime" column="create_time"/>
+
+        <result property="name" column="name_"/>
+        <result property="path" column="path_"/>
+
+        <result property="suffix" column="suffix"/>
+        <result property="temp" column="temp_"/>
+        <result property="size" column="size_"/>
+
+        <discriminator column="type_" javaType="String">
+            <case value="Photo" resultMap="photoMap"/>
+        </discriminator>
+    </resultMap>
+
+    <resultMap type="GlobalSetting" id="globalSettingMap">
+        <id property="id" column="id"/>
+        <result property="guid" column="guid"/>
+        <result property="archived" column="archived"/>
+        <result property="createTime" column="create_time"/>
+
+        <result property="useDefaultFrontPhotos" column="use_default_front_photos"/>
+
+    </resultMap>
+
+    <resultMap type="Photo" extends="geckoFileMap" id="photoMap">
+        <result property="url" column="url"/>
+        <result property="description" column="description"/>
+        <result property="headPhoto" column="head_photo"/>
+
+        <association property="album" column="album_id"
+                     select="com.andaily.zhishifenzi.infrastructure.mybatis.AlbumRepositoryMyBatis.findAlbumById"/>
+    </resultMap>
+
+
+    <select id="findGeckoFileByGuid" parameterType="String" resultMap="geckoFileMap">
+         select * from gecko_file where  guid = #{guid}
+	</select>
+
+    <select id="findGeckoFileById" parameterType="Integer" resultMap="geckoFileMap">
+         select * from gecko_file where id = #{id}
+	</select>
+
+    <select id="findPhotoByAlbumId" parameterType="Integer" resultMap="photoMap">
+         select * from gecko_file
+         where album_id = #{albumId}
+         and type_ = 'Photo'
+         and archived = 0
+         and head_photo = 0
+	</select>
+
+    <select id="findSyncPhotos" parameterType="map" resultMap="photoMap">
+        select * from gecko_file
+        where head_photo = 0
+        and type_ = 'Photo'
+        and archived = 0
+        and album_id is not null
+        <if test="displayType != null">
+            and url is not null
+        </if>
+        <if test="displayType == null">
+            and url is null
+        </if>
+        order by create_time desc
+        limit #{startIndex}, #{perPageSize}
+    </select>
+
+    <select id="totalSyncPhotos" parameterType="map" resultType="int">
+        select count(id) from gecko_file
+        where head_photo = 0
+        and type_ = 'Photo'
+        and archived = 0
+        and album_id is not null
+        <if test="displayType != null">
+            and url is not null
+        </if>
+        <if test="displayType == null">
+            and url is null
+        </if>
+    </select>
+
+    <select id="findHeadPhotos" resultMap="photoMap">
+         select * from gecko_file
+         where type_ = 'Photo'
+         and head_photo = 1
+	</select>
+
+    <select id="findGlobalSetting" resultMap="globalSettingMap">
+         select * from global_setting
+	</select>
+
+
+    <insert id="saveGeckoFile" parameterType="GeckoFile" useGeneratedKeys="true" keyProperty="id">
+        insert into gecko_file(guid,archived,create_time,name_,path_,
+        suffix,temp_, size_)
+        values
+        (#{guid},#{archived},#{createTime},#{name},#{path},
+        #{suffix}, #{temp}, #{size})
+    </insert>
+
+    <insert id="savePhoto" parameterType="Photo" useGeneratedKeys="true" keyProperty="id">
+        insert into gecko_file(guid,archived,create_time,name_,path_,
+        suffix,temp_, size_, type_, url, description, head_photo, album_id)
+        values
+        (#{guid},#{archived},#{createTime},#{name},#{path},
+        #{suffix}, #{temp}, #{size}, 'Photo', #{url}, #{description}, #{headPhoto}, #{album.id})
+    </insert>
+
+    <update id="updateGeckoFile" parameterType="GeckoFile" flushCache="true">
+        update gecko_file set
+        name_ = #{name},
+        path_ = #{path},
+        suffix = #{suffix},
+        temp_ = #{temp},
+        size_ = #{size}
+        where guid = #{guid}
+    </update>
+
+    <update id="updatePhoto" parameterType="Photo" flushCache="true">
+        update gecko_file set
+        name_ = #{name},
+        path_ = #{path},
+        suffix = #{suffix},
+        temp_ = #{temp},
+        url = #{url},
+        description = #{description},
+        head_photo = #{headPhoto},
+        size_ = #{size}
+        where guid = #{guid}
+        and type_ = 'Photo'
+    </update>
+
+    <update id="updateGlobalSetting" parameterType="GlobalSetting" flushCache="true">
+        update global_setting set
+        use_default_front_photos = #{useDefaultFrontPhotos}
+    </update>
+
+    <delete id="deleteGeckoFile" parameterType="GeckoFile" flushCache="true">
+        delete from gecko_file where guid = #{guid}
+    </delete>
+
+</mapper>

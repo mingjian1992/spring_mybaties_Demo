@@ -1,0 +1,611 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.andaily.zhishifenzi.infrastructure.mybatis.MatchRepositoryMyBatis">
+
+    <resultMap type="Goal" id="goalMap">
+        <id property="id" column="id"/>
+        <result property="guid" column="guid"/>
+        <result property="archived" column="archived"/>
+        <result property="createTime" column="create_time"/>
+
+        <result property="ownGoal" column="own_goal"/>
+        <result property="goalTime" column="goal_time"/>
+
+        <association property="goalPlayer" column="goal_player_id"
+                     select="com.andaily.zhishifenzi.infrastructure.mybatis.PlayerRepositoryMyBatis.findPlayerById"/>
+        <association property="assistantPlayer" column="assistant_player_id"
+                     select="com.andaily.zhishifenzi.infrastructure.mybatis.PlayerRepositoryMyBatis.findPlayerById"/>
+        <association property="match" column="match_id" select="findMatchById"/>
+
+    </resultMap>
+
+    <resultMap type="MatchNotice" id="matchNoticeMap">
+        <id property="id" column="id"/>
+        <result property="guid" column="guid"/>
+        <result property="archived" column="archived"/>
+        <result property="createTime" column="create_time"/>
+
+        <result property="time" column="time_"/>
+        <result property="remark" column="remark"/>
+        <result property="pending" column="pending"/>
+
+        <association property="creator" column="creator_id"
+                     select="com.andaily.zhishifenzi.infrastructure.mybatis.UserRepositoryMyBatis.findUserById"/>
+        <association property="stadium" column="stadium_id"
+                     select="com.andaily.zhishifenzi.infrastructure.mybatis.StadiumRepositoryMyBatis.findStadiumById"/>
+        <association property="opponent" column="opponent_id"
+                     select="com.andaily.zhishifenzi.infrastructure.mybatis.ClubRepositoryMyBatis.findClubById"/>
+        <association property="match" column="match_id" select="findMatchById"/>
+
+    </resultMap>
+
+
+    <resultMap type="MatchPlayer" id="matchPlayerMap">
+        <id property="id" column="id"/>
+        <result property="guid" column="guid"/>
+        <result property="archived" column="archived"/>
+        <result property="createTime" column="create_time"/>
+
+        <association property="player" column="player_id"
+                     select="com.andaily.zhishifenzi.infrastructure.mybatis.PlayerRepositoryMyBatis.findPlayerById"/>
+        <association property="match" column="match_id" select="findMatchById"/>
+    </resultMap>
+
+    <resultMap type="Match" id="matchMap">
+        <id property="id" column="id"/>
+        <result property="guid" column="guid"/>
+        <result property="archived" column="archived"/>
+        <result property="createTime" column="create_time"/>
+
+        <result property="matchTime" column="match_time"/>
+        <result property="homeScores" column="home_scores"/>
+        <result property="awayScores" column="away_scores"/>
+
+        <result property="remark" column="remark"/>
+        <result property="futsal" column="futsal"/>
+
+        <association property="notice" column="notice_id" select="findMatchNoticeById"/>
+        <association property="season" column="season_id"
+                     select="com.andaily.zhishifenzi.infrastructure.mybatis.SeasonRepositoryMyBatis.findSeasonById"/>
+        <association property="opponent" column="opponent_id"
+                     select="com.andaily.zhishifenzi.infrastructure.mybatis.ClubRepositoryMyBatis.findClubById"/>
+
+        <association property="stadium" column="stadium_id"
+                     select="com.andaily.zhishifenzi.infrastructure.mybatis.StadiumRepositoryMyBatis.findStadiumById"/>
+        <association property="creator" column="creator_id"
+                     select="com.andaily.zhishifenzi.infrastructure.mybatis.UserRepositoryMyBatis.findUserById"/>
+
+        <collection property="goals" column="id" select="findGoalByMatchId"/>
+        <collection property="players" column="id" select="findPlayerByMatchId"/>
+    </resultMap>
+
+    <resultMap type="Match" id="matchSimpleMap">
+        <id property="id" column="id"/>
+        <result property="guid" column="guid"/>
+        <result property="archived" column="archived"/>
+        <result property="createTime" column="create_time"/>
+
+        <result property="matchTime" column="match_time"/>
+        <result property="homeScores" column="home_scores"/>
+        <result property="awayScores" column="away_scores"/>
+
+        <result property="remark" column="remark"/>
+        <result property="futsal" column="futsal"/>
+
+    </resultMap>
+
+
+    <select id="findGoalByGuid" parameterType="String" resultMap="goalMap">
+         select * from goal where  guid = #{guid}
+	</select>
+
+    <select id="totalScores" resultType="int">
+         select count(g.id) from goal g
+         where  g.archived = 0
+	</select>
+
+    <select id="totalMatches" resultType="int">
+         select count(g.id) from match_ g
+         where  g.archived = 0
+	</select>
+
+    <select id="totalAssists" resultType="int">
+         select count(g.id) from goal g
+         where  g.archived = 0
+         and g.assistant_player_id is not null
+	</select>
+
+    <select id="totalPlayerScores" parameterType="Player" resultType="int">
+         select count(g.id) from goal g
+         where  g.archived = 0
+         and g.goal_player_id = #{id}
+	</select>
+
+    <select id="totalPlayerAssists" parameterType="Player" resultType="int">
+         select count(g.id) from goal g
+         where  g.archived = 0
+         and g.assistant_player_id = #{id}
+	</select>
+
+    <select id="findByGuid" parameterType="String" resultMap="matchMap">
+         select * from match_ where  guid = #{guid}
+	</select>
+
+    <select id="findPlayerMatches" parameterType="Player" resultMap="matchSimpleMap">
+         select distinct m.* from match_ m, match_player p
+         where  m.archived = 0
+         and m.id = p.match_id
+         and p.player_id = #{id}
+	</select>
+
+    <select id="findMatchNoticeByGuid" parameterType="String" resultMap="matchNoticeMap">
+         select * from match_notice where  guid = #{guid}
+	</select>
+
+    <select id="findPendingNotices" resultMap="matchNoticeMap">
+         select * from match_notice
+         where  archived = 0
+         and pending = 1
+         order by time_ desc
+	</select>
+
+    <select id="findGoalById" parameterType="Integer" resultMap="goalMap">
+         select * from goal
+         where id = #{id}
+         and archived = 0
+	</select>
+
+    <select id="findMatchById" parameterType="Integer" resultMap="matchMap">
+         select * from match_
+         where id = #{id}
+         and archived = 0
+	</select>
+
+    <select id="findLatestMatches" parameterType="Integer" resultMap="matchMap">
+         select * from match_
+         where archived = 0
+         order by match_time desc
+        limit #{limited}
+	</select>
+
+    <select id="findMatchesBySeason" resultMap="matchMap">
+         select * from match_
+         where archived = 0
+         and season_id = #{season.id}
+         order by match_time asc
+	</select>
+
+    <select id="findGoalByMatchId" parameterType="Integer" resultMap="goalMap">
+         select * from goal
+         where match_id = #{matchId}
+         and archived = 0
+	</select>
+
+    <select id="findPlayerByMatchId" parameterType="Integer" resultMap="matchPlayerMap">
+         select * from match_player
+         where match_id = #{matchId}
+         and archived = 0
+	</select>
+
+    <select id="findMatchNoticeById" parameterType="Integer" resultMap="matchNoticeMap">
+         select * from match_notice
+         where id = #{id}
+         and archived = 0
+	</select>
+
+    <select id="findListMatchNotices" parameterType="map" resultMap="matchNoticeMap">
+        select u.* from match_notice u
+        where u.archived = 0
+        <if test="stadiumGuid != null">
+            and u.stadium_id = (
+            select id from stadium where guid = #{stadiumGuid}
+            )
+        </if>
+        <if test="opponentGuid != null">
+            and u.opponent_id = (
+            select id from club where guid = #{opponentGuid}
+            )
+        </if>
+        order by u.time_ desc
+        limit #{startIndex}, #{perPageSize}
+    </select>
+
+    <select id="totalListMatchNotices" parameterType="map" resultType="int">
+        select count(u.id) from match_notice u
+        where u.archived = 0
+        <if test="stadiumGuid != null">
+            and u.stadium_id = (
+            select id from stadium where guid = #{stadiumGuid}
+            )
+        </if>
+        <if test="opponentGuid != null">
+            and u.opponent_id = (
+            select id from club where guid = #{opponentGuid}
+            )
+        </if>
+    </select>
+
+
+    <select id="findGoalRecordMatches" parameterType="map" resultMap="matchMap">
+        select distinct m.* from match_ m, goal g, player p
+        where m.archived = 0
+        and g.match_id = m.id
+        and g.goal_player_id = p.id
+        and p.guid = #{guid}
+        order by m.match_time desc
+        limit #{startIndex}, #{perPageSize}
+    </select>
+
+    <select id="totalGoalRecordMatches" parameterType="map" resultType="int">
+        select count(distinct m.id) from match_ m, goal g, player p
+        where m.archived = 0
+        and g.match_id = m.id
+        and g.goal_player_id = p.id
+        and p.guid = #{guid}
+    </select>
+
+    <select id="findAssistRecordMatches" parameterType="map" resultMap="matchMap">
+        select distinct m.* from match_ m, goal g, player p
+        where m.archived = 0
+        and g.match_id = m.id
+        and g.assistant_player_id = p.id
+        and p.guid = #{guid}
+        order by m.match_time desc
+        limit #{startIndex}, #{perPageSize}
+    </select>
+
+    <select id="totalAssistRecordMatches" parameterType="map" resultType="int">
+        select count(distinct m.id) from match_ m, goal g, player p
+        where m.archived = 0
+        and g.match_id = m.id
+        and g.assistant_player_id = p.id
+        and p.guid = #{guid}
+    </select>
+
+
+    <select id="findJoinRecordMatches" parameterType="map" resultMap="matchMap">
+        select distinct m.* from match_ m, match_player g, player p
+        where m.archived = 0
+        and g.match_id = m.id
+        and g.player_id = p.id
+        and p.guid = #{guid}
+        order by m.match_time desc
+        limit #{startIndex}, #{perPageSize}
+    </select>
+
+    <select id="totalJoinRecordMatches" parameterType="map" resultType="int">
+        select count(distinct m.id) from match_ m, match_player g, player p
+        where m.archived = 0
+        and g.match_id = m.id
+        and g.player_id = p.id
+        and p.guid = #{guid}
+    </select>
+
+
+    <select id="findPeriodRecordMatches" parameterType="map" resultMap="matchMap">
+        select m.* from match_ m
+        where m.archived = 0
+        and  date_format(m.match_time,'%Y-%m-%d') &gt;= #{start}
+        and  date_format(m.match_time,'%Y-%m-%d') &lt;= #{end}
+        order by m.match_time asc
+        limit #{startIndex}, #{perPageSize}
+    </select>
+
+    <select id="totalPeriodRecordMatches" parameterType="map" resultType="int">
+        select count(m.id) from match_ m
+        where m.archived = 0
+        and  date_format(m.match_time,'%Y-%m-%d') &gt;= #{start}
+        and  date_format(m.match_time,'%Y-%m-%d') &lt;= #{end}
+    </select>
+
+
+    <select id="findListMatches" parameterType="map" resultMap="matchMap">
+        select u.* from match_ u
+        where u.archived = 0
+        <if test="seasonGuid != null">
+            and u.season_id = (
+            select id from season where guid = #{seasonGuid}
+            )
+        </if>
+        <if test="result == 1">
+            and u.home_scores &gt; u.away_scores
+        </if>
+        <if test="result == 0">
+            and u.home_scores = u.away_scores
+        </if>
+        <if test="result == 2">
+            and u.home_scores &lt; u.away_scores
+        </if>
+        <if test="stadiumGuid != null">
+            and u.stadium_id = (
+            select id from stadium where guid = #{stadiumGuid}
+            )
+        </if>
+        <if test="opponentGuid != null">
+            and u.opponent_id = (
+            select id from club where guid = #{opponentGuid}
+            )
+        </if>
+        <if test="remark != null">
+            and u.remark like #{remark}
+        </if>
+        <if test="matchDate != null">
+            and date_format(u.match_time,'%Y-%m-%d') = #{matchDate}
+        </if>
+        order by u.match_time desc
+        limit #{startIndex}, #{perPageSize}
+    </select>
+
+    <select id="totalListMatches" parameterType="map" resultType="int">
+        select count(u.id) from match_ u
+        where u.archived = 0
+        <if test="seasonGuid != null">
+            and u.season_id = (
+            select id from season where guid = #{seasonGuid}
+            )
+        </if>
+        <if test="result == 1">
+            and u.home_scores &gt; u.away_scores
+        </if>
+        <if test="result == 0">
+            and u.home_scores = u.away_scores
+        </if>
+        <if test="result == 2">
+            and u.home_scores &lt; u.away_scores
+        </if>
+        <if test="stadiumGuid != null">
+            and u.stadium_id = (
+            select id from stadium where guid = #{stadiumGuid}
+            )
+        </if>
+        <if test="opponentGuid != null">
+            and u.opponent_id = (
+            select id from club where guid = #{opponentGuid}
+            )
+        </if>
+        <if test="remark != null">
+            and u.remark like #{remark}
+        </if>
+        <if test="matchDate != null">
+            and date_format(u.match_time,'%Y-%m-%d') = #{matchDate}
+        </if>
+    </select>
+
+
+    <select id="findMyMatches" parameterType="map" resultMap="matchMap">
+        select distinct u.* from match_ u, match_player p, user_ us
+        where u.archived = 0
+        and u.id = p.match_id
+        and us.player_id = p.player_id
+        and us.id = #{user.id}
+        <if test="seasonGuid != null">
+            and u.season_id = (
+            select id from season where guid = #{seasonGuid}
+            )
+        </if>
+        <if test="hasGoal != null">
+            and u.id in (
+            select g.match_id from goal g
+            where g.goal_player_id = us.player_id
+            )
+        </if>
+        <if test="hasAssist != null">
+            and u.id in (
+            select g.match_id from goal g
+            where g.assistant_player_id = us.player_id
+            )
+        </if>
+        <if test="result == 1">
+            and u.home_scores &gt; u.away_scores
+        </if>
+        <if test="result == 0">
+            and u.home_scores = u.away_scores
+        </if>
+        <if test="result == 2">
+            and u.home_scores &lt; u.away_scores
+        </if>
+        order by u.match_time desc
+        limit #{startIndex}, #{perPageSize}
+    </select>
+
+    <select id="totalMyMatches" parameterType="map" resultType="int">
+        select count(distinct u.id) from match_ u, match_player p, user_ us
+        where u.archived = 0
+        and u.id = p.match_id
+        and us.player_id = p.player_id
+        and us.id = #{user.id}
+        <if test="seasonGuid != null">
+            and u.season_id = (
+            select id from season where guid = #{seasonGuid}
+            )
+        </if>
+        <if test="hasGoal != null">
+            and u.id in (
+            select g.match_id from goal g
+            where g.goal_player_id = us.player_id
+            )
+        </if>
+        <if test="hasAssist != null">
+            and u.id in (
+            select g.match_id from goal g
+            where g.assistant_player_id = us.player_id
+            )
+        </if>
+        <if test="result == 1">
+            and u.home_scores &gt; u.away_scores
+        </if>
+        <if test="result == 0">
+            and u.home_scores = u.away_scores
+        </if>
+        <if test="result == 2">
+            and u.home_scores &lt; u.away_scores
+        </if>
+    </select>
+
+
+    <select id="findClubMatches" parameterType="map" resultMap="matchMap">
+        select u.* from match_ u
+        where u.archived = 0
+        and u.opponent_id = (
+        select id from club where guid = #{clubGuid}
+        )
+        order by u.match_time desc
+        limit #{startIndex}, #{perPageSize}
+    </select>
+
+    <select id="totalClubMatches" parameterType="map" resultType="int">
+        select count(u.id) from match_ u
+        where u.archived = 0
+        and u.opponent_id = (
+        select id from club where guid = #{clubGuid}
+        )
+    </select>
+
+
+    <select id="findScoreRanges" parameterType="String" resultType="int">
+        select u.home_scores-u.away_scores from match_ u
+        where u.archived = 0
+        and u.opponent_id = (
+        select id from club where guid = #{clubGuid}
+        )
+    </select>
+
+    <select id="findStadiumMatches" parameterType="map" resultMap="matchMap">
+        select u.* from match_ u
+        where u.archived = 0
+        and u.stadium_id = (
+        select id from stadium where guid = #{stadiumGuid}
+        )
+        order by u.match_time desc
+        limit #{startIndex}, #{perPageSize}
+    </select>
+
+    <select id="totalStadiumMatches" parameterType="map" resultType="int">
+        select count(u.id) from match_ u
+        where u.archived = 0
+        and u.stadium_id = (
+        select id from stadium where guid = #{stadiumGuid}
+        )
+    </select>
+
+
+    <insert id="saveGoal" parameterType="Goal" useGeneratedKeys="true" keyProperty="id">
+        insert into goal(guid,archived,create_time,goal_player_id, assistant_player_id,
+        own_goal,goal_time,match_id)
+        values
+        (#{guid},#{archived},#{createTime},#{goalPlayer.id}, #{assistantPlayer.id},
+        #{ownGoal},#{goalTime},#{match.id})
+    </insert>
+
+    <insert id="saveGoals">
+        insert into goal(guid,archived,create_time,goal_player_id, assistant_player_id,
+        own_goal,goal_time,match_id)
+        values
+        <foreach collection="goals" index="index" item="item" separator=",">
+            (#{item.guid},#{item.archived},#{item.createTime},#{item.goalPlayer.id}, #{item.assistantPlayer.id},
+            #{item.ownGoal},#{item.goalTime},#{item.match.id})
+        </foreach>
+    </insert>
+
+    <insert id="saveMatchPlayer" parameterType="MatchPlayer" useGeneratedKeys="true" keyProperty="id">
+        insert into match_player(guid,archived,create_time,match_id, player_id)
+        values
+        (#{guid},#{archived},#{createTime},#{match.id}, #{player.id})
+    </insert>
+
+    <insert id="saveMatchPlayers">
+        insert into match_player(guid,archived,create_time,match_id, player_id)
+        values
+        <foreach collection="players" index="index" item="item" separator=",">
+            (#{item.guid},#{item.archived},#{item.createTime},#{item.match.id}, #{item.player.id})
+        </foreach>
+
+    </insert>
+
+    <insert id="saveMatchNotice" parameterType="MatchNotice" useGeneratedKeys="true" keyProperty="id">
+        insert into match_notice(guid,archived,create_time,time_, stadium_id,
+        opponent_id, creator_id, remark, pending, match_id)
+        values
+        (#{guid},#{archived},#{createTime},#{time}, #{stadium.id},
+        #{opponent.id},#{creator.id},#{remark}, #{pending}, #{match.id})
+    </insert>
+
+    <insert id="saveMatch" parameterType="Match" useGeneratedKeys="true" keyProperty="id">
+        insert into match_(guid,archived,create_time,match_time, home_scores, away_scores,
+        notice_id, season_id, stadium_id,
+        opponent_id, creator_id, remark, futsal)
+        values
+        (#{guid},#{archived},#{createTime},#{matchTime}, #{homeScores},#{awayScores},
+        #{notice.id},#{season.id},#{stadium.id},
+        #{opponent.id},#{creator.id},#{remark}, #{futsal})
+    </insert>
+
+    <update id="updateGoal" parameterType="Goal" flushCache="true">
+        update goal set
+        goal_player_id = #{goalPlayer.id},
+        assistant_player_id = #{assistantPlayer.id},
+        own_goal = #{ownGoal},
+        goal_time = #{goalTime},
+        match_id = #{match.id},
+        archived = #{archived}
+        where guid = #{guid}
+    </update>
+
+    <update id="updateMatch" parameterType="Match" flushCache="true">
+        update match_ set
+        match_time = #{matchTime},
+        home_scores = #{homeScores},
+        away_scores = #{awayScores},
+        notice_id = #{notice.id},
+        season_id = #{season.id},
+        stadium_id = #{stadium.id},
+        opponent_id = #{opponent.id},
+        remark = #{remark},
+        futsal = #{futsal},
+        archived = #{archived}
+        where guid = #{guid}
+    </update>
+
+    <update id="updateMatchNotice" parameterType="MatchNotice" flushCache="true">
+        update match_notice set
+        time_ = #{time},
+        stadium_id = #{stadium.id},
+        opponent_id = #{opponent.id},
+        match_id = #{match.id},
+        remark = #{remark},
+        pending = #{pending},
+        archived = #{archived}
+        where guid = #{guid}
+    </update>
+
+    <update id="archiveMatchPlayers" parameterType="Match" flushCache="true">
+        update match_player set
+        archived = 1
+        where match_id = #{id}
+    </update>
+
+    <update id="archiveMatchGoals" parameterType="Match" flushCache="true">
+        update goal set
+        archived = 1
+        where match_id = #{id}
+    </update>
+
+    <delete id="deleteMatchPlayers" flushCache="true">
+        delete from match_player
+        where guid in
+        <foreach collection="players" index="index" item="item" open="(" separator="," close=")">
+            #{item.guid}
+        </foreach>
+    </delete>
+
+    <delete id="deleteGoals" flushCache="true">
+        delete from goal
+        where guid in
+        <foreach collection="goals" index="index" item="item" open="(" separator="," close=")">
+            #{item.guid}
+        </foreach>
+    </delete>
+
+
+</mapper>

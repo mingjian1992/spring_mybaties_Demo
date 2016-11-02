@@ -1,0 +1,99 @@
+
+
+
+以下是项目的一些规范，请大家自觉遵守。
+
+
+>> 1.开发使用软件及版本信息
+
+ * JDK     1.7.0_40
+ * Maven   3.1.0
+ * IDEA    11.1.3
+ * Tomcat  7.0.47
+ * MySQL   5.5
+ * TortoiseSVN  1.7.7
+ * Git  1.7.10
+
+
+(更多开发软件及版本号在第一次使用到时再指定)
+[务必使用相同的软件版本]
+      
+
+
+
+>> 2.常用配置与要求
+
+ 电脑配置
+    * 中英文切换快捷键〈Ctrl+Shift+Home〉
+    * IDEA所有快捷键不能任意更换
+
+ 数据库开发
+    *表(table)与字段(column)全小写，以下画线分隔，如user; user_detail; color_def
+    *所有SQL脚本必须手写，不能使用工具导出生成
+    *任何字段，除了明确要求外，不要添加任何约束。如非空约束，长度限制
+    *开发数据库名：ipo；测试数据库名：ipo_test
+
+ Hibernate配置
+    *映射文件禁止使用many-to-many，用one-to-many 替换
+    *映射文件统一放置在infrastructure模块的persistence.hibernate.mapping目录
+    *按Domain的属性进行映射，即在映射文件中使用<hibernate-mapping default-access="field">
+
+
+ IDEA配置
+    *代码自动缩进(快捷键Ctrl+Alt+L)
+    *具体参见intellij_templates.txt
+
+ SVN使用要求
+    *每次提交前先更新
+    *提交代码时必须写注释(Comment)，内容是关于提交或更改的功能的描述
+    *代码必须确保在本地编译通过；尽量在完成一个功能，测试通过，并在review后提交
+
+
+>> 3.项目配置与要求
+
+	*浏览器支持：IE7-9 与 Safari
+	*DTO不能传入到Domain中
+	*所有Service方法的参数与返回值必须是基础数据类型与DTO，不能是Domain
+	*service层不做任何业务处理
+	*方法或构造器的参数尽量控制到4过以下
+
+	*方法名与属性名必须有意义，不能乱命名方法名。JSP文件与包(package)命名要求全小写，如：companyform.jsp；com.achievo.ipo ；
+	 类名，方法名，属性名遵守驼峰命名规则，如：CompanyController
+	*对于业务方法，Domain方法与数据库操作必须写单元测试（使用TestNG）
+	*Service类配置在application.xml文件中；Repository类配置在infrastructure.xml文件中；Controller配置在ipo-servlet.xml文件中
+	*项目事务添加到service中(com.achievo.ipo.service包及其子包)；Service方法中以load开头的方法只有只读事务，其他方法支持写事务
+	*URL设置要求
+            1）.所有URL设置按模块划分目录，如Company模块的顶层目录为/company。所有Company的URL都在该目录下，如Company添加URL为：/company/add；
+	        编辑Company的URL为：/company/edit；删除的URL为：/company/delete；Overview的URL为：/company/overview 。
+		其他的URL按其功能命名，如导出为：/company/export。 若有参数的URL如：/company/edit?guid=1223-soed-d等。
+            2). 配置URL时分模块且结构清晰.
+            3). 页面上的URL使用相对路径或完整路径(包括contextPath)
+            4). URL的配置尽量简单清晰，一看就明白其功能
+
+	*对于获取Spring容器中的实例时，可使用BeanProvider.getBean(Class clazz)获取。在Domain中获取Repository的方法如下：
+	   
+          private transient BacklogRepository backlogRepository = BeanProvider.getBean(BacklogRepository.class);
+
+	  使用时如下：
+	    public void saveOrUpdate() {
+		getRepository().saveOrUpdate(this);
+	    }
+
+	*前台使用JQUERY及相关插件
+        *
+	*任何新建的Repository必须继承Repository接口；Hibernate实现类必须继承AbstractRepository抽象类(该基类)。一个示例如下：
+
+	   public interface DoctorQualificationRepository extends Repository {
+	       //codes
+	   }
+
+	   public class DoctorQualificationRepositoryHibernate extends AbstractRepository implements DoctorQualificationRepository {
+	      //codes
+	   }
+
+	
+
+4.	
+
+
+

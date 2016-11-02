@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.andaily.zhishifenzi.infrastructure.mybatis.AlbumRepositoryMyBatis">
+
+    <resultMap type="Album" id="albumMap">
+        <id property="id" column="id"/>
+        <result property="guid" column="guid"/>
+        <result property="archived" column="archived"/>
+        <result property="createTime" column="create_time"/>
+
+        <result property="name" column="name_"/>
+        <result property="description" column="description"/>
+
+        <association property="creator" column="creator_id"
+                     select="com.andaily.zhishifenzi.infrastructure.mybatis.UserRepositoryMyBatis.findUserById"/>
+        <association property="match" column="match_id"
+                     select="com.andaily.zhishifenzi.infrastructure.mybatis.MatchRepositoryMyBatis.findMatchById"/>
+
+        <collection property="photos" column="id"
+                    select="com.andaily.zhishifenzi.infrastructure.mybatis.CommonsRepositoryMyBatis.findPhotoByAlbumId"/>
+    </resultMap>
+
+
+    <select id="findByGuid" parameterType="String" resultMap="albumMap">
+         select * from album where  guid = #{guid}
+	</select>
+
+    <select id="findByName" parameterType="String" resultMap="albumMap">
+         select * from album where  name_ = #{name}
+	</select>
+
+    <select id="findAlbumByMatchGuid" parameterType="String" resultMap="albumMap">
+         select a.* from album a, match_ m
+         where a.archived = 0
+         and m.id = a.match_id
+         and m.guid = #{guid}
+	</select>
+
+    <select id="findAlbumById" parameterType="Integer" resultMap="albumMap">
+         select * from album
+         where id = #{id}
+	</select>
+
+    <select id="findListAlbums" parameterType="map" resultMap="albumMap">
+        select u.* from album u
+        where u.archived = 0
+        <if test="name != null">
+            and u.name_ like #{name}
+        </if>
+        order by u.create_time desc
+        limit #{startIndex}, #{perPageSize}
+    </select>
+
+    <select id="totalListAlbums" parameterType="map" resultType="int">
+        select count(u.id) from album u
+        where u.archived = 0
+        <if test="name != null">
+            and u.name_ like #{name}
+        </if>
+    </select>
+
+    <select id="findMainAlbums" parameterType="map" resultMap="albumMap">
+        select u.* from album u
+        where u.archived = 0
+        order by u.create_time desc
+    </select>
+
+
+    <insert id="saveAlbum" parameterType="Album" useGeneratedKeys="true" keyProperty="id">
+        insert into album(guid,archived,create_time,name_, description,
+        match_id, creator_id)
+        values
+        (#{guid},#{archived},#{createTime},#{name}, #{description},
+        #{match.id}, #{creator.id})
+    </insert>
+
+    <update id="updateAlbum" parameterType="Album" flushCache="true">
+        update album set
+        name_ = #{name},
+        description = #{description},
+        match_id = #{match.id},
+        archived = #{archived}
+        where guid = #{guid}
+    </update>
+
+    <!--<update id="archiveUser" flushCache="true">-->
+    <!--update user_ set-->
+    <!--archived = #{archived}-->
+    <!--where guid = #{guid}-->
+    <!--</update>-->
+
+
+</mapper>

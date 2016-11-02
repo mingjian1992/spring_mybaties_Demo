@@ -1,0 +1,73 @@
+
+Task list
+
+-- 2014-04-29 -----
+前台
+1.比赛信息明细                                                                                                              OK(2014-04-29)
+2.球员信息明细(暂不加这功能)                                                                                      已有了
+3.首页比赛搜索功能
+
+
+后台
+1.球员,队长权限设置(球员看不到赛季)                                                                           OK(2014-04-30)
+2.修改个人设置信息                                                                                                      OK(2014-05-15)
+3.修改密码                                                                                                                    OK(2014-05-15)
+4.球场->比赛纪录                                                                                                           OK(2014-05-07)
+5.球员->数据                                                                                                                  OK(2014-05-09)
+
+6.相册->首页背景图片(暂去掉)                                                                                   OK(2014-04-30)
+7.对手->交战纪录                                                                                                       OK(2014-05-07)
+
+
+-- 2014-05-15 -----
+1.社会化分享                                                                                                              OK(2014-05-15)
+2.同步上传的图片到云存储服务器上(admin)
+3.图片lazy load(http://code.ciaoca.com/jquery/lazyload/)                                      OK(2014-06-07)
+
+
+-- 2014-05-19 -----
+1.操作日志管理(admin)                                                                                              OK(2014-05-29)
+2.比赛详细信息 修改title,方便分享;参赛球员显示总数                                              OK(2014-05-19)
+3.比赛页面的统计信息中的"场次"修改为"场次(总)"                                                   OK(2014-05-19)
+4.数据取消显示"球场"列                                                                                            OK(2014-05-19)
+
+5.前端的进球与助攻的球员点击后添加popover, 显示位置与加入球队日期.                OK(2014-06-07)
+6.登录后首页显示比赛预告信息(如果有)                                                                    OK(2014-05-21)
+7."我的比赛"增加"有我进球"与"有我助攻"选项                                                          OK(2014-05-21)
+8.对手的"交战纪录"添加胜平负数据,如"交战成绩: 3胜1平1负"                                   OK(2014-05-22)
+
+9.球员添加号码,头像与个人描述                                                                               OK(2014-06-07)
+
+
+
+-- 2014-05-21 -----
+1.首页背景照片管理
+2.添加非比赛类型的公告
+3.添加比赛可上传比赛照片
+4.比赛评论管理(包括添加,显示与管理)
+
+
+
+-- Image resources --
+imageView/1/w/200/h/140/q/85
+
+http://zsfz.qiniudn.com/aa.jpg
+http://zsfz.qiniudn.com/bb.jpg
+http://zsfz.qiniudn.com/cc.jpg
+http://zsfz.qiniudn.com/ee.jpg
+
+http://zsfz.qiniudn.com/3.jpg
+
+
+-- 2014-05-23 -----
+alter table player add `number_` varchar(255);
+alter table player add `description` text;
+alter table player add `head_photo_id` int(11);
+
+create index head_photo_id_index on player(head_photo_id);
+
+
+-- 2014-05-29 ----
+头像上传参考 http://git.oschina.net/easy-solution/tqe/blob/master/src/main/webapp/WEB-INF/jsp/school/studentForm.jsp
+
+

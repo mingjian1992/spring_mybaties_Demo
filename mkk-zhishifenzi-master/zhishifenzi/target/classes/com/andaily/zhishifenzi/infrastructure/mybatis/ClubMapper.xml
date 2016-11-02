@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.andaily.zhishifenzi.infrastructure.mybatis.ClubRepositoryMyBatis">
+
+    <resultMap type="Club" id="clubMap">
+        <id property="id" column="id"/>
+        <result property="guid" column="guid"/>
+        <result property="archived" column="archived"/>
+        <result property="createTime" column="create_time"/>
+
+        <result property="name" column="name_"/>
+        <result property="contact" column="contact"/>
+        <result property="remark" column="remark"/>
+
+        <association property="creator" column="creator_id"
+                     select="com.andaily.zhishifenzi.infrastructure.mybatis.UserRepositoryMyBatis.findUserById"/>
+    </resultMap>
+
+
+    <select id="findByGuid" parameterType="String" resultMap="clubMap">
+         select * from club where  guid = #{guid}
+	</select>
+
+    <select id="findByName" parameterType="String" resultMap="clubMap">
+         select * from club where  name_ = #{name}
+	</select>
+
+    <select id="findAllClubs" resultMap="clubMap">
+         select * from club where  archived = 0
+	</select>
+
+    <select id="findClubById" parameterType="Integer" resultMap="clubMap">
+         select * from club
+         where id = #{id}
+	</select>
+
+    <select id="findListClubs" parameterType="map" resultMap="clubMap">
+        select u.* from club u
+        where u.archived = 0
+        <if test="name != null">
+            and u.name_ like #{name}
+        </if>
+        order by u.create_time desc
+        limit #{startIndex}, #{perPageSize}
+    </select>
+
+    <select id="totalListClubs" parameterType="map" resultType="int">
+        select count(u.id) from club u
+        where u.archived = 0
+        <if test="name != null">
+            and u.name_ like #{name}
+        </if>
+    </select>
+
+    <insert id="saveClub" parameterType="Club" useGeneratedKeys="true" keyProperty="id">
+        insert into club(guid,archived,create_time,name_, contact, remark,
+        creator_id)
+        values
+        (#{guid},#{archived},#{createTime},#{name}, #{contact}, #{remark},
+        #{creator.id})
+    </insert>
+
+    <update id="updateClub" parameterType="Club" flushCache="true">
+        update club set
+        name_ = #{name},
+        contact = #{contact},
+        remark = #{remark},
+        archived = #{archived}
+        where guid = #{guid}
+    </update>
+
+    <!--<update id="archiveUser" flushCache="true">-->
+    <!--update user_ set-->
+    <!--archived = #{archived}-->
+    <!--where guid = #{guid}-->
+    <!--</update>-->
+
+
+</mapper>

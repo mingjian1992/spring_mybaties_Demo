@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>首页 - 知识分子足球队</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="http://cdn.bootcss.com/html5shiv/3.7.0/html5shiv.min.js"></script>
+    <script src="http://cdn.bootcss.com/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+    <style>
+        body {
+            font-family: "微软雅黑", Helvetica, Verdana, Arial, sans-serif;
+            /*padding-top: 10px;*/
+            padding-bottom: 10px;
+        }
+
+        .navbar-wrapper {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 20;
+            margin-top: 10px;
+        }
+
+    </style>
+</head>
+<body>
+<!--navbar -->
+<div class="navbar-wrapper">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <nav class="navbar navbar-inverse" role="navigation">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle" data-toggle="collapse"
+                                data-target="#navbar-collapse-01">
+                            <span class="sr-only">Toggle navigation</span>
+                        </button>
+                        <a class="navbar-brand" href="#"><strong>知识分子</strong></a>
+                    </div>
+                    <div class="collapse navbar-collapse" id="navbar-collapse-01">
+                        <ul class="nav navbar-nav">
+                            <li class="active"><a href="#">首页</a></li>
+                            <li><a href="template2_match.html">比赛</a></li>
+                            <li><a href="template2_data.html">数据</a></li>
+                            <li><a href="template2_photo.html">相册</a></li>
+                        </ul>
+                        <!--right navbar-->
+                        <ul class="nav navbar-nav navbar-right">
+                            <li><a href="#"><i class="glyphicon glyphicon-user"></i> 登录</a></li>
+                        </ul>
+                    </div>
+                    <!-- /.navbar-collapse -->
+                </nav>
+                <!-- /navbar -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+    <!-- Indicators -->
+    <ol class="carousel-indicators">
+        <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
+        <li data-target="#carousel-example-generic" data-slide-to="1"></li>
+        <li data-target="#carousel-example-generic" data-slide-to="2"></li>
+        <li data-target="#carousel-example-generic" data-slide-to="3"></li>
+        <!-- <li data-target="#carousel-example-generic" data-slide-to="4"></li> -->
+    </ol>
+
+    <!-- Wrapper for slides -->
+    <div class="carousel-inner">
+        <div class="item active">
+            <img src="images/_1.jpg" alt="index.jpg"
+                 class="img-responsive center-block" style="max-height: 500px;max-width: 100%"/>
+
+            <div class="carousel-caption">
+                <p class="text-muted">
+                    其实以前我们是一群黄色的球衣穿着的人, 站在那块草地上.
+                </p>
+            </div>
+        </div>
+        <div class="item">
+            <img src="images/_2.jpg"
+                 alt="about.jpg" class="img-responsive center-block" style="max-height: 500px;max-width: 100%"/>
+
+            <div class="carousel-caption">
+                <p class="text-muted">
+                    我们在默默哀悼, 祝福一切平安.
+                </p>
+            </div>
+        </div>
+        <div class="item">
+            <img src="images/_3.jpg"
+                 alt="about.jpg" class="img-responsive center-block" style="max-height: 500px;max-width: 100%"/>
+
+            <div class="carousel-caption">
+                <p class="text-muted">
+                    那一帮一起带着汗水笑着拍照的我们.
+                </p>
+            </div>
+        </div>
+        <div class="item">
+            <img src="images/_4.jpg"
+                 alt="about.jpg" class="img-responsive center-block" style="max-height: 500px;max-width: 100%"/>
+
+            <div class="carousel-caption">
+                <p class="text-muted">
+                    这背景, 这场地...
+                </p>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Controls -->
+    <a class="left carousel-control" href="#carousel-example-generic" data-slide="prev">
+        <span class="glyphicon glyphicon-chevron-left"></span>
+    </a>
+    <a class="right carousel-control" href="#carousel-example-generic" data-slide="next">
+        <span class="glyphicon glyphicon-chevron-right"></span>
+    </a>
+</div>
+
+<br/>
+
+<div class="container">
+<div class="row">
+    <div class="col-md-12">
+        <div class="alert alert-info">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <strong>比赛预告:</strong> 3月2日，10：00，太平寺 4 号场地，对手：昌达足球队。穿新球衣。
+        </div>
+    </div>
+</div>
+
+<div class="row">
+<div class="col-md-8">
+    <div class="panel panel-success">
+        <div class="panel-heading">
+            <div class="input-group">
+                <input type="text" class="form-control" id="match" name="match" placeholder="输入关键字搜索比赛">
+                     <span class="input-group-btn">
+                          <button class="btn btn-default" type="button"><i class="glyphicon glyphicon-search"></i>
+                          </button>
+                    </span>
+            </div>
+        </div>
+        <div class="panel-body text-danger">
+            <i class="glyphicon glyphicon-flag"></i> <em>真正的比赛是在下一场...</em>
+        </div>
+        <!-- List group -->
+        <div class="list-group">
+            <a href="#" class="list-group-item">
+                <h1 class="glyphicon glyphicon-time pull-left text-success"></h1>
+
+                <h3 class="list-group-item-heading">
+                    <strong class="text-danger">5:1</strong> vs
+                    <small class="text-info">电脑城足球队</small>
+                </h3>
+
+                <p class="list-group-item-text text-muted">
+                    2014-02-22 10:30-13:00
+                    <br/>
+                    进球：李胜钊(1)，郑醒(4); 助攻: xxx,xxx,xxx
+                </p>
+            </a>
+            <a href="#" class="list-group-item ">
+                <h1 class="glyphicon glyphicon-time pull-left text-success"></h1>
+
+                <h3 class="list-group-item-heading">
+                    <strong class="text-danger">2:1</strong> vs
+                    <small class="text-info">环保局</small>
+                </h3>
+
+                <p class="list-group-item-text text-muted">
+                    2014-02-17 10:30-13:00
+                    <br/>
+                    进球：李胜钊(1)，郑醒(1); 助攻: xxx,xxx,xxx
+
+                </p>
+            </a>
+            <a href="#" class="list-group-item">
+                <h1 class="glyphicon glyphicon-time pull-left text-success"></h1>
+
+                <h3 class="list-group-item-heading">
+                    <strong class="text-muted">1:1</strong> vs
+                    <small class="text-info">昌达足球队</small>
+                </h3>
+
+                <p class="list-group-item-text text-muted">
+                    2014-02-10 10:30-13:00
+                    <br/>
+                    进球：李胜钊(1) 助攻: xxx,xxx,xxx
+                </p>
+            </a>
+            <a href="#" class="list-group-item ">
+                <h1 class="glyphicon glyphicon-time pull-left text-success"></h1>
+
+                <h3 class="list-group-item-heading">
+                    <strong class="text-warning">2:3</strong> vs
+                    <small class="text-info">SKO足球队</small>
+                </h3>
+
+                <p class="list-group-item-text text-muted">
+                    2014-02-02 14:30-16:00
+                    <br/>
+                    进球：李胜钊(1)，郑醒(1); 助攻: xxx,xxx,xxx
+
+                </p>
+            </a>
+        </div>
+        <div class="panel-footer">
+            <a href="template2_match.html"><i class="glyphicon glyphicon-share-alt"></i> 查看所有比赛...</a>
+        </div>
+    </div>
+
+</div>
+<div class="col-md-4 well">
+    <div class="panel panel-info">
+        <div class="panel-body">
+
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="#goals" data-toggle="tab"><strong>进球</strong></a></li>
+                <li><a href="#assistant" data-toggle="tab"><strong>助攻</strong></a></li>
+
+            </ul>
+
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <div class="tab-pane active" id="goals">
+
+                    <table class="table table-striped" style="margin-top:3px;">
+                        <tr>
+                            <td style="width:15%;">1.</td>
+                            <td><a href="#">吴东</a></td>
+                            <td style="width:20%;"><span class="label label-danger">34</span></td>
+                        </tr>
+                        <tr>
+                            <td>2.</td>
+                            <td><a href="#">汤坤</a></td>
+                            <td><span class="label label-warning">30</span></td>
+                        </tr>
+                        <tr>
+                            <td>3.</td>
+                            <td><a href="#">郑醒</a></td>
+                            <td><span class="label label-info">25</span></td>
+                        </tr>
+                        <tr>
+                            <td>4.</td>
+                            <td><a href="#">查尔斯</a></td>
+                            <td><span class="label label-default">24</span></td>
+                        </tr>
+                        <tr>
+                            <td>5.</td>
+                            <td><a href="#">王敏</a></td>
+                            <td><span class="label label-default">23</span></td>
+                        </tr>
+                        <tr>
+                            <td>6.</td>
+                            <td><a href="#">李胜钊</a></td>
+                            <td><span class="label label-default">15</span></td>
+                        </tr>
+                        <tr>
+                            <td>7.</td>
+                            <td><a href="#">刘阳</a></td>
+                            <td><span class="label label-default">11</span></td>
+                        </tr>
+                        <tr>
+                            <td>8.</td>
+                            <td><a href="#">刘鑫</a></td>
+                            <td><span class="label label-default">10</span></td>
+                        </tr>
+                        <tr>
+                            <td>9.</td>
+                            <td><a href="#">Tom</a></td>
+                            <td><span class="label label-default">9</span></td>
+                        </tr>
+                        <tr>
+                            <td>10.</td>
+                            <td><a href="#">小蒋</a></td>
+                            <td><span class="label label-default">8</span></td>
+                        </tr>
+                        <tr>
+                            <td>11.</td>
+                            <td><a href="#">王国强</a></td>
+                            <td><span class="label label-default">4</span></td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="tab-pane" id="assistant">
+                    <table class="table table-striped" style="margin-top:3px;">
+                        <tr>
+                            <td style="width:15%;">1.</td>
+                            <td><a href="#">汤坤</a></td>
+                            <td style="width:20%;"><span class="label label-danger">16</span></td>
+                        </tr>
+                        <tr>
+                            <td>2.</td>
+                            <td><a href="#">吴东</a></td>
+                            <td><span class="label label-warning">14</span></td>
+                        </tr>
+                        <tr>
+                            <td>3.</td>
+                            <td><a href="#">郑醒</a></td>
+                            <td><span class="label label-info">12</span></td>
+                        </tr>
+                        <tr>
+                            <td>4.</td>
+                            <td><a href="#">查尔斯</a></td>
+                            <td><span class="label label-default">9</span></td>
+                        </tr>
+                        <tr>
+                            <td>5.</td>
+                            <td><a href="#">王敏</a></td>
+                            <td><span class="label label-default">7</span></td>
+                        </tr>
+                        <tr>
+                            <td>6.</td>
+                            <td><a href="#">李胜钊</a></td>
+                            <td><span class="label label-default">4</span></td>
+                        </tr>
+                        <tr>
+                            <td>7.</td>
+                            <td><a href="#">刘鑫</a></td>
+                            <td><span class="label label-default">4</span></td>
+                        </tr>
+                        <tr>
+                            <td>8.</td>
+                            <td><a href="#">代力韬</a></td>
+                            <td><span class="label label-default">3</span></td>
+                        </tr>
+                        <tr>
+                            <td>9.</td>
+                            <td><a href="#">夏竹</a></td>
+                            <td><span class="label label-default">3</span></td>
+                        </tr>
+                        <tr>
+                            <td>10.</td>
+                            <td><a href="#">刘阳</a></td>
+                            <td><span class="label label-default">2</span></td>
+                        </tr>
+                    </table>
+
+                </div>
+
+            </div>
+        </div>
+        <div class="panel-footer text-muted">
+            <i class="glyphicon glyphicon-info-sign"></i> 以上数据是球员的所有进球与助攻排名.
+        </div>
+    </div>
+</div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <hr/>
+        <p class="text-center text-muted">
+            &copy; 2014 知识分子足球队 All rights reserved.
+        </p>
+    </div>
+</div>
+</div>
+<!-- /.container -->
+
+
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="http://cdn.bootcss.com/jquery/1.10.2/jquery.min.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="js/bootstrap.min.js"></script>
+</body>
+</html>

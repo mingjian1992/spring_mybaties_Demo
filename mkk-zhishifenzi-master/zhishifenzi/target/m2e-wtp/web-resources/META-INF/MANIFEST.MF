@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Built-By: pc-mingjian
+Build-Jdk: 1.8.0_111
+Implementation-Vendor: andaily.com
+Implementation-Title: zhishifenzi
+Implementation-Version: 0.2
+Implementation-BuildNumber: 0.2
+Created-By: Maven Integration for Eclipse
+Specification-Vendor: andaily.com
+

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+    <title>Test Lazy</title>
+
+</head>
+<body>
+<div>
+    <img class="lazy" data-original="http://zsfz.qiniudn.com/3.jpg" src="grey.gif" style="width: 670px;height: 502px;"/>
+    <br/>
+    <img class="lazy" data-original="http://zsfz.qiniudn.com/aa.jpg" src="grey.gif"
+         style="width: 1920px;height: 502px;"/>
+    <br/>
+    <img class="lazy" data-original="http://zsfz.qiniudn.com/bb.jpg" src="grey.gif"
+         style="width: 1920px;height: 502px;"/>
+    <br/>
+    <img class="lazy" data-original="http://zsfz.qiniudn.com/cc.jpg" src="grey.gif"
+         style="width: 1920px;height: 502px;"/>
+    <br/>
+    <img class="lazy" data-original="http://zsfz.qiniudn.com/ee.jpg" src="grey.gif"
+         style="width: 1920px;height: 502px;"/>
+</div>
+
+<script src="http://code.ciaoca.com/jquery/lazyload/demo/js/jquery-1.7.2.min.js"></script>
+<script src="http://code.ciaoca.com/jquery/lazyload/demo/js/jquery.lazyload.min.js"></script>
+<script>
+    $(function () {
+        $("img.lazy").lazyload({
+            effect:"fadeIn",
+            threshold:10
+        });
+    });
+</script>
+</body>
+</html>

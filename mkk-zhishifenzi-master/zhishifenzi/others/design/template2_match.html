@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>比赛 - 知识分子足球队</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link href="css/datepicker.css" rel="stylesheet"/>
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="http://cdn.bootcss.com/html5shiv/3.7.0/html5shiv.min.js"></script>
+    <script src="http://cdn.bootcss.com/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+    <style>
+        body {
+            font-family: "微软雅黑", Helvetica, Verdana, Arial, sans-serif;
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+<div class="row">
+    <div class="col-md-12">
+        <nav class="navbar navbar-inverse" role="navigation">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse"
+                        data-target="#navbar-collapse-01">
+                    <span class="sr-only">Toggle navigation</span>
+                </button>
+                <a class="navbar-brand" href="#"><strong>知识分子</strong></a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar-collapse-01">
+                <ul class="nav navbar-nav">
+                    <li><a href="template2.html">首页</a></li>
+                    <li class="active"><a href="#">比赛</a></li>
+                    <li><a href="template2_data.html">数据</a></li>
+                    <li><a href="template2_photo.html">相册</a></li>
+                </ul>
+                <!--right navbar-->
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="#"><i class="glyphicon glyphicon-user"></i> 登录</a></li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </nav>
+        <!-- /navbar -->
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="alert alert-info">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <strong>比赛预告:</strong> 3月2日，10：00，太平寺 4 号场地，对手：昌达足球队。穿新球衣。
+        </div>
+    </div>
+</div>
+
+<div class="row">
+<div class="col-md-12">
+    <div class="panel panel-success">
+        <div class="panel-heading">
+            <form class="form-inline" role="form" action="">
+              
+              <div class="form-group">
+                <label class="sr-only" for="homeAway">主客场</label>
+                <select id="homeAway" name="homeAway" class="form-control">
+                    <option value="">主客场</option>
+                    <option value="HOME">主场</option>
+                    <option value="AWAY">客场</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="sr-only" for="season">赛季</label>
+                <select id="season" name="season" class="form-control">
+                    <option value="">所有赛季</option>
+                    <option value="2014">2014 赛季</option>
+                    <option value="2013">2013 赛季</option>
+                    <option value="2012">2012 赛季</option>
+                    <option value="2011">2011 赛季</option>
+                    <option value="2010">2010 赛季</option>
+                    <option value="2009">2009 赛季</option>
+                    <option value="2008">2008 赛季</option>
+                </select>
+              </div>              
+              <div class="form-group">
+                <label class="sr-only" for="result">所有比赛结果</label>
+                <select id="result" name="result" class="form-control">
+                    <option value="">所有比赛结果</option>
+                    <option value="VICTORY">胜</option>
+                    <option value="DRAW">平</option>
+                    <option value="NEGATIVE">负</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="sr-only" for="venue">比赛场地</label>
+                <select id="venue" name="venue" class="form-control">
+                    <option value="">所有比赛场地</option>
+                    <option value="1">太平寺2号场地</option>
+                    <option value="2">太平寺3号场地</option>
+                    <option value="3">太平寺4号场地</option>
+                    <option value="4">民院</option>
+                    <option value="5">川大(磨子桥)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="sr-only" for="matchDate">比赛日期</label>
+                <input type="text" name="matchDate" class="form-control" id="matchDate" placeholder="比赛日期"/>
+              </div>
+              <div class="form-group">
+                <label class="sr-only" for="key">比赛关键字</label>
+                <input type="text" name="key" class="form-control" id="key" placeholder="比赛关键字"/>
+              </div>
+
+              <button type="submit" class="btn btn-primary" title="搜索"><i class="glyphicon glyphicon-search"></i> 搜索</button>
+            </form>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-md-9">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover">
+                            <thead>
+                            <tr>
+                                <th>时间</th>
+                                <th>对手</th>
+                                <th>比分</th>
+                                <th>进球</th>
+                                <th>助攻</th>
+                                <th>场地</th>
+                                <th>&nbsp;</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>2013-01-02</td>
+                                <td>天下足球队</td>
+                                <td><strong class="text-danger">3:1</strong></td>
+                                <td>xxx(1), xxx(2)</td>
+                                <td>xxx(1), xxx(2)</td>
+                                <td>太平寺2号场地</td>
+                                <td><a href="#" title="详细"><i class="glyphicon glyphicon-exclamation-sign"></i></a></td>
+                            </tr>
+                            <tr>
+                                <td>2013-01-09</td>
+                                <td>昌达足球队</td>
+                                <td><strong class="text-danger">2:1</strong></td>
+                                <td>xxx(2)</td>
+                                <td>xxx(1), xxx(1)</td>
+                                <td>太平寺2号场地</td>
+                                <td><a href="#" title="详细"><i class="glyphicon glyphicon-exclamation-sign"></i></a></td>
+                            </tr>
+                            <tr>
+                                <td>2013-01-16</td>
+                                <td>巴中足球队</td>
+                                <td><strong class="text-warning">0:1</strong></td>
+                                <td>---</td>
+                                <td>---</td>
+                                <td>太平寺3号场地</td>
+                                <td><a href="#" title="详细"><i class="glyphicon glyphicon-exclamation-sign"></i></a></td>
+                            </tr>
+                            <tr>
+                                <td>2013-01-26</td>
+                                <td>环保局</td>
+                                <td><strong class="text-muted">1:1</strong></td>
+                                <td>xxx(1)</td>
+                                <td>xxx(1)</td>
+                                <td>民院</td>
+                                <td><a href="#" title="详细"><i class="glyphicon glyphicon-exclamation-sign"></i></a></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <ul class="pagination">
+                          <li class="disabled"><a href="javascript:void(0)">&laquo;</a></li>
+                          <li class="active"><a href="javascript:void(0)">1</a></li>
+                          <li><a href="#">2</a></li>
+                          <li><a href="#">3</a></li>
+                          <li><a href="#">4</a></li>
+                          <li><a href="#">5</a></li>
+                          <li><a href="#">&raquo;</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="panel panel-danger">
+                        <div class="panel-heading">
+                            <i class="glyphicon glyphicon-stats"></i> 统计信息
+                        </div>
+                        <ul class="list-group">
+                          <li class="list-group-item text-info">
+                            <span class="badge">24</span>
+                            总比赛次数
+                          </li>
+                          <li class="list-group-item text-success">
+                            <span class="badge">54</span>
+                            总进球数
+                          </li>
+                          <li class="list-group-item text-warning">
+                            <span class="badge">19</span>
+                            总失球数
+                          </li>
+                          <li class="list-group-item text-muted">
+                            <span class="badge">23</span>
+                            总助攻数
+                          </li>
+                          <li class="list-group-item text-info">
+                            <span class="badge">15/3/6</span>
+                            胜/平/负
+                          </li>
+                        </ul>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+        <div class="panel-footer text-danger">
+            <i class="glyphicon glyphicon-flag"></i> <em>真正的比赛是在下一场...</em>
+        </div>
+    </div>
+</div>
+</div>
+
+
+<div class="row">
+    <div class="col-md-12">
+        <hr/>
+        <p class="text-center text-muted">
+            &copy; 2014 知识分子足球队 All rights reserved.
+        </p>
+    </div>
+</div>
+</div>
+<!-- /.container -->
+
+
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="http://cdn.bootcss.com/jquery/1.10.2/jquery.min.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="js/bootstrap.min.js"></script>
+<script src="js/bootstrap-datepicker.js"></script>
+<script src="js/bootstrap-datepicker.zh-CN.js"></script>
+<script>
+    $(function(){
+        $('#matchDate').datepicker({
+            format:'yyyy-mm-dd',
+            autoclose:true,
+            language:"zh-CN",
+            todayHighlight:true,
+            weekStart:1
+        });
+    });
+</script>
+</body>
+</html>

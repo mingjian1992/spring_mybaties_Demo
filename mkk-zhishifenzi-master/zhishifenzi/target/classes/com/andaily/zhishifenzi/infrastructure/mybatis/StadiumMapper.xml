@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.andaily.zhishifenzi.infrastructure.mybatis.StadiumRepositoryMyBatis">
+
+    <resultMap type="Stadium" id="stadiumMap">
+        <id property="id" column="id"/>
+        <result property="guid" column="guid"/>
+        <result property="archived" column="archived"/>
+        <result property="createTime" column="create_time"/>
+
+        <result property="name" column="name_"/>
+        <result property="contact" column="contact"/>
+        <result property="address" column="address"/>
+        <result property="remark" column="remark"/>
+
+        <result property="homeStadium" column="home_stadium"/>
+    </resultMap>
+
+
+    <select id="findByGuid" parameterType="String" resultMap="stadiumMap">
+         select * from stadium where  guid = #{guid}
+	</select>
+
+    <select id="findByName" parameterType="String" resultMap="stadiumMap">
+         select * from stadium where  name_ = #{name}
+	</select>
+
+    <select id="findAllStadiums" resultMap="stadiumMap">
+         select * from stadium where  archived = 0
+	</select>
+
+    <select id="findStadiumById" parameterType="Integer" resultMap="stadiumMap">
+         select * from stadium
+         where id = #{id}
+	</select>
+
+    <select id="findListStadiums" parameterType="map" resultMap="stadiumMap">
+        select u.* from stadium u
+        where u.archived = 0
+        <if test="name != null">
+            and u.name_ like #{name}
+        </if>
+        order by u.create_time desc
+        limit #{startIndex}, #{perPageSize}
+    </select>
+
+    <select id="totalListStadiums" parameterType="map" resultType="int">
+        select count(u.id) from stadium u
+        where u.archived = 0
+        <if test="name != null">
+            and u.name_ like #{name}
+        </if>
+    </select>
+
+    <insert id="saveStadium" parameterType="Stadium" useGeneratedKeys="true" keyProperty="id">
+        insert into stadium(guid,archived,create_time,name_, contact, remark,
+        address, home_stadium)
+        values
+        (#{guid},#{archived},#{createTime},#{name}, #{contact}, #{remark},
+        #{address}, #{homeStadium})
+    </insert>
+
+    <update id="updateStadium" parameterType="Stadium" flushCache="true">
+        update stadium set
+        name_ = #{name},
+        contact = #{contact},
+        remark = #{remark},
+        address = #{address},
+        home_stadium = #{homeStadium},
+        archived = #{archived}
+        where guid = #{guid}
+    </update>
+
+    <!--<update id="archiveUser" flushCache="true">-->
+    <!--update user_ set-->
+    <!--archived = #{archived}-->
+    <!--where guid = #{guid}-->
+    <!--</update>-->
+
+
+</mapper>

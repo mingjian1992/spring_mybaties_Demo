@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.andaily.zhishifenzi.infrastructure.mybatis.LogRepositoryMyBatis">
+
+    <resultMap type="Log" id="logMap">
+        <id property="id" column="id"/>
+        <result property="guid" column="guid"/>
+        <result property="archived" column="archived"/>
+        <result property="createTime" column="create_time"/>
+
+        <result property="time" column="time_"/>
+        <result property="content" column="content"/>
+        <result property="type" column="type_"/>
+        <result property="ipAddress" column="ip_address"/>
+
+        <result property="important" column="important"/>
+
+        <association property="creator" column="creator_id"
+                     select="com.andaily.zhishifenzi.infrastructure.mybatis.UserRepositoryMyBatis.findUserById"/>
+        <association property="who" column="who_id"
+                     select="com.andaily.zhishifenzi.infrastructure.mybatis.UserRepositoryMyBatis.findUserById"/>
+
+        <!--<discriminator column="class_" javaType="String">-->
+        <!--<case value="ProjectLog" resultMap="projectLogMap"/>-->
+        <!--</discriminator>-->
+    </resultMap>
+
+
+    <select id="findByGuid" parameterType="String" resultMap="logMap">
+         select * from log where  guid = #{guid}
+	</select>
+
+    <select id="findLogById" parameterType="Integer" resultMap="logMap">
+         select * from log where id = #{id} and archived = 0
+	</select>
+
+
+    <select id="findSystemLogs" parameterType="map" resultMap="logMap">
+        select u.* from log u
+        where u.archived = 0
+        <if test="name != null">
+            and u.content like #{name}
+        </if>
+        <if test="type != null">
+            and u.type_ = #{type}
+        </if>
+        <if test="userGuid != null">
+            and u.who_id = (
+            select id from user_ where guid = #{userGuid}
+            )
+        </if>
+        order by u.time_ desc
+        limit #{startIndex}, #{perPageSize}
+    </select>
+
+    <select id="totalSystemLogs" parameterType="map" resultType="int">
+        select count(u.id) from log u
+        where u.archived = 0
+        <if test="name != null">
+            and u.content like #{name}
+        </if>
+        <if test="type != null">
+            and u.type_ = #{type}
+        </if>
+        <if test="userGuid != null">
+            and u.who_id = (
+            select id from user_ where guid = #{userGuid}
+            )
+        </if>
+    </select>
+
+
+    <insert id="saveLog" parameterType="Log" useGeneratedKeys="true" keyProperty="id">
+        insert into log(guid,archived,create_time,time_,content,
+        who_id, type_, ip_address, creator_id, important)
+        values
+        (#{guid},#{archived},#{createTime},#{time},#{content},
+        #{who.id}, #{type}, #{ipAddress}, #{creator.id}, #{important})
+    </insert>
+
+
+    <update id="updateLog" parameterType="Log" flushCache="true">
+        update log set
+        time_ = #{time},
+        content = #{content},
+        ip_address = #{ipAddress},
+        important = #{important},
+        archived = #{archived}
+        where guid = #{guid}
+    </update>
+
+</mapper>

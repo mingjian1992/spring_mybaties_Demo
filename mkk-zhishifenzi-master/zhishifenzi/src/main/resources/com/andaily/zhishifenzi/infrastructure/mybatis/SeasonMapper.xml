@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.andaily.zhishifenzi.infrastructure.mybatis.SeasonRepositoryMyBatis">
+
+    <resultMap type="Season" id="seasonMap">
+        <id property="id" column="id"/>
+        <result property="guid" column="guid"/>
+        <result property="archived" column="archived"/>
+        <result property="createTime" column="create_time"/>
+
+        <result property="name" column="name_"/>
+        <result property="start" column="start"/>
+        <result property="end" column="end_"/>
+
+        <result property="remark" column="remark"/>
+    </resultMap>
+
+
+    <select id="findByGuid" parameterType="String" resultMap="seasonMap">
+         select * from season where  guid = #{guid}
+	</select>
+
+    <select id="findSeasonById" parameterType="Integer" resultMap="seasonMap">
+         select * from season
+         where id = #{id}
+         and archived = 0
+	</select>
+
+    <select id="findAllSeasons" resultMap="seasonMap">
+         select * from season
+         where archived = 0
+         order by start desc
+	</select>
+
+    <select id="findBeforeSeasons" parameterType="java.util.Date" resultMap="seasonMap">
+         select * from season
+         where archived = 0
+         and start &lt; #{date}
+         order by start desc
+	</select>
+
+    <select id="findListSeasons" parameterType="map" resultMap="seasonMap">
+        select u.* from season u
+        where u.archived = 0
+        order by u.start desc
+        limit #{startIndex}, #{perPageSize}
+    </select>
+
+    <select id="totalListSeasons" parameterType="map" resultType="int">
+        select count(u.id) from season u
+        where u.archived = 0
+    </select>
+
+    <insert id="saveSeason" parameterType="Season" useGeneratedKeys="true" keyProperty="id">
+        insert into season(guid,archived,create_time,name_, start,
+        end_, remark)
+        values
+        (#{guid},#{archived},#{createTime},#{name}, #{start},
+        #{end}, #{remark})
+    </insert>
+
+    <update id="updateSeason" parameterType="Season" flushCache="true">
+        update season set
+        name_ = #{name},
+        start = #{start},
+        end_ = #{end},
+        remark = #{remark},
+        archived = #{archived}
+        where guid = #{guid}
+    </update>
+
+    <update id="archiveSeasonMatches" parameterType="Season" flushCache="true">
+        update match_ set
+        archived = 1
+        where
+        season_id = #{id}
+    </update>
+
+
+</mapper>

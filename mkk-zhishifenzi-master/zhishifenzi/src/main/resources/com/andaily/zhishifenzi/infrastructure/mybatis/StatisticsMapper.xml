@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.andaily.zhishifenzi.infrastructure.mybatis.StatisticsRepositoryMyBatis">
+
+    <resultMap type="GoalDto" id="goalDtoMap">
+        <result property="playerGuid" column="player_guid"/>
+        <result property="playerName" column="player_name"/>
+        <result property="goals" column="goals"/>
+    </resultMap>
+
+    <resultMap type="SingleMatchPlayerDataDto" id="singleMatchPlayerDataDtoMap">
+        <result property="count" column="count_"/>
+        <result property="matchGuid" column="match_guid"/>
+        <result property="matchTime" column="match_time"/>
+
+        <result property="matchOpponentName" column="oppo_name"/>
+        <result property="playerName" column="player_name"/>
+        <result property="playerGuid" column="player_guid"/>
+    </resultMap>
+
+    <resultMap type="AssistantDto" id="assistantDtoMap">
+        <result property="playerGuid" column="player_guid"/>
+        <result property="playerName" column="player_name"/>
+        <result property="assistants" column="assistants"/>
+    </resultMap>
+
+    <resultMap type="MatchScoreDiffDto" id="matchScoreDiffDtoMap">
+        <result property="diffScores" column="diff_scores"/>
+        <result property="matchTime" column="match_time"/>
+        <result property="matchGuid" column="match_guid"/>
+    </resultMap>
+
+
+    <select id="countAllGoals" resultMap="goalDtoMap">
+         select count(g.id) as goals, p.full_name as player_name, p.guid as  player_guid
+         from goal g, player p
+         where g.goal_player_id = p.id
+         and g.archived = 0
+         and p.archived = 0
+         group by g.goal_player_id
+         order by goals desc
+	</select>
+
+    <select id="findAllMatchScoresDiff" resultMap="matchScoreDiffDtoMap">
+         select (home_scores - away_scores) as diff_scores, match_time, guid as match_guid
+         from match_
+         where archived = 0
+         order by match_time asc
+	</select>
+
+    <select id="totalJoinMatchesPlayer" resultMap="singleMatchPlayerDataDtoMap">
+        select count(m.id) as count_, pl.guid as player_guid, pl.full_name as player_name
+        from match_ m, match_player p, player pl
+        where m.id = p.match_id
+        and pl.id = p.player_id
+        and m.archived = 0
+        group by pl.id
+        order by count_ desc
+        limit 1
+	</select>
+
+    <select id="singleMatchMostGoals" resultMap="singleMatchPlayerDataDtoMap">
+        select (m.home_scores) as count_, m.guid as match_guid, m.match_time as match_time, c.name_ as oppo_name
+        from match_ m, club c
+        where m.archived = 0
+        and m.opponent_id = c.id
+        order by count_ desc, m.match_time desc
+        limit 1
+	</select>
+
+    <select id="countOfMatches" resultType="int">
+         select count(m.id)
+          from match_ m
+          where m.archived = 0
+	</select>
+
+    <select id="countMostGoals" resultMap="goalDtoMap">
+         select count(g.id) as goals, p.full_name as player_name, p.guid as  player_guid
+         from goal g, player p
+         where g.goal_player_id = p.id
+         and g.archived = 0
+         and p.archived = 0
+         group by g.goal_player_id
+         order by goals desc
+         limit 1
+	</select>
+
+    <select id="singleMatchPlayerMostGoals" resultMap="singleMatchPlayerDataDtoMap">
+        select count(g.id) as count_, pl.full_name as player_name, m.match_time, m.guid as match_guid, c.name_ as oppo_name
+        from match_ m, match_player p, goal g, player pl, club c
+        where m.id = p.match_id
+        and g.match_id = m.id
+        and pl.id = p.player_id
+        and g.goal_player_id = pl.id
+        and c.id = m.opponent_id
+        and m.archived = 0
+        group by m.id, pl.id
+        order by count_ desc
+        limit 1
+	</select>
+
+    <select id="singleMatchPlayerMostAssists" resultMap="singleMatchPlayerDataDtoMap">
+        select count(g.id) as count_, pl.full_name as player_name, m.match_time, m.guid as match_guid, c.name_ as oppo_name
+        from match_ m, match_player p, goal g, player pl, club c
+        where m.id = p.match_id
+        and g.match_id = m.id
+        and pl.id = p.player_id
+        and g.assistant_player_id = pl.id
+        and c.id = m.opponent_id
+        and m.archived = 0
+        group by m.id, pl.id
+        order by count_ desc, m.match_time desc
+        limit 1
+	</select>
+
+    <select id="countSeasonGoals" parameterType="Season" resultMap="goalDtoMap">
+         select count(g.id) as goals, p.full_name as player_name, p.guid as  player_guid
+         from goal g, player p, match_ m
+         where g.goal_player_id = p.id
+         and g.match_id = m.id
+         and m.season_id = #{id}
+         and g.archived = 0
+         and p.archived = 0
+         group by g.goal_player_id
+         order by goals desc
+	</select>
+
+
+    <select id="countAllAssistants" resultMap="assistantDtoMap">
+         select count(g.id) as assistants, p.full_name as player_name, p.guid as  player_guid
+         from goal g, player p
+         where g.assistant_player_id = p.id
+         and g.archived = 0
+         and p.archived = 0
+         group by g.assistant_player_id
+         order by assistants desc
+	</select>
+
+    <select id="countMostAssistants" resultMap="assistantDtoMap">
+         select count(g.id) as assistants, p.full_name as player_name, p.guid as  player_guid
+         from goal g, player p
+         where g.assistant_player_id = p.id
+         and g.archived = 0
+         and p.archived = 0
+         group by g.assistant_player_id
+         order by assistants desc
+         limit 1
+	</select>
+
+    <select id="countSeasonAssistants" parameterType="Season" resultMap="assistantDtoMap">
+         select count(g.id) as assistants, p.full_name as player_name, p.guid as  player_guid
+         from goal g, player p, match_ m
+         where g.assistant_player_id = p.id
+         and g.match_id = m.id
+         and m.season_id = #{id}
+         and g.archived = 0
+         and p.archived = 0
+         group by g.assistant_player_id
+         order by assistants desc
+	</select>
+
+
+</mapper>

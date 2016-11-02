@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.andaily.zhishifenzi.infrastructure.mybatis.PlayerRepositoryMyBatis">
+
+    <resultMap type="Player" id="playerMap">
+        <id property="id" column="id"/>
+        <result property="guid" column="guid"/>
+        <result property="archived" column="archived"/>
+        <result property="createTime" column="create_time"/>
+
+        <result property="fullName" column="full_name"/>
+        <result property="position" column="position_"/>
+        <result property="captain" column="captain"/>
+
+        <result property="email" column="email"/>
+        <result property="phone" column="phone"/>
+        <result property="entryDate" column="entry_date"/>
+
+        <result property="birthday" column="birthday"/>
+        <result property="description" column="description"/>
+        <result property="number" column="number_"/>
+
+        <association property="headPhoto" column="head_photo_id"
+                     select="com.andaily.zhishifenzi.infrastructure.mybatis.CommonsRepositoryMyBatis.findGeckoFileById"/>
+
+    </resultMap>
+
+
+    <select id="findByGuid" parameterType="String" resultMap="playerMap">
+         select * from player where  guid = #{guid}
+	</select>
+
+    <select id="findByFullName" parameterType="String" resultMap="playerMap">
+         select * from player where  full_name = #{fullName}
+	</select>
+
+    <select id="findAvailablePlayers" resultMap="playerMap">
+         select * from player where archived = 0
+	</select>
+
+    <select id="findPlayerById" parameterType="Integer" resultMap="playerMap">
+         select * from player
+         where id = #{id}
+	</select>
+
+    <select id="findListPlayers" parameterType="map" resultMap="playerMap">
+        select u.* from player u
+        where u.archived = 0
+        <if test="name != null">
+            and u.full_name like #{name}
+        </if>
+        order by u.entry_date desc
+    </select>
+
+    <!--<select id="totalOverviewUsers" parameterType="map" resultType="int">-->
+    <!--select count(u.id) from user_ u-->
+    <!--where u.archived = 0-->
+    <!--<if test="username != null">-->
+    <!--and u.username like #{username}-->
+    <!--</if>-->
+    <!--</select>-->
+
+    <insert id="savePlayer" parameterType="Player" useGeneratedKeys="true" keyProperty="id">
+        insert into player(guid,archived,create_time,full_name, position_,captain,
+        email,phone,entry_date,birthday,
+        number_,description,head_photo_id)
+        values
+        (#{guid},#{archived},#{createTime},#{fullName}, #{position}, #{captain},
+        #{email},#{phone},#{entryDate},#{birthday},
+        #{number},#{description},#{headPhoto.id})
+    </insert>
+
+    <update id="updatePlayer" parameterType="Player" flushCache="true">
+        update player set
+        full_name = #{fullName},
+        email = #{email},
+        phone = #{phone},
+        entry_date = #{entryDate},
+        birthday = #{birthday},
+        position_ = #{position},
+        captain = #{captain},
+        number_ = #{number},
+        description = #{description},
+        head_photo_id = #{headPhoto.id},
+        archived = #{archived}
+        where guid = #{guid}
+    </update>
+
+    <update id="archivePlayerUser" flushCache="true">
+    update user_ set
+    archived = #{archived}
+    where player_id = #{player.id}
+    and type_ = 'PlayerUser'
+    </update>
+
+
+</mapper>

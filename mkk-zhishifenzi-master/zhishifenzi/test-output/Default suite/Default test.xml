@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite hostname="pc-PC" name="com.andaily.zhishifenzi.infrastructure.PasswordHandlerTest" tests="1" failures="0" timestamp="2 Nov 2016 08:45:38 GMT" time="0.128" errors="0">
+  <testcase name="testDecryptReversiblePassword" time="0.114" classname="com.andaily.zhishifenzi.infrastructure.PasswordHandlerTest"/>
+</testsuite>

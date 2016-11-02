@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="http://www.springframework.org/schema/tx" xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+			http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+		  http://www.springframework.org/schema/tx
+		  http://www.springframework.org/schema/tx/spring-tx-3.0.xsd http://www.springframework.org/schema/context
+		  http://www.springframework.org/schema/context/spring-context-3.1.xsd
+		  http://www.springframework.org/schema/aop
+		  http://www.springframework.org/schema/aop/spring-aop-2.0.xsd">
+
+
+    <!--annotation configuration -->
+    <context:annotation-config/>
+    <context:component-scan base-package="com.andaily.zhishifenzi.service"/>
+
+    <!-- property configuration -->
+    <!-- property configuration -->
+    <bean id="properties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+        <property name="locations">
+            <list>
+                <value>classpath:zhishifenzi.properties</value>
+            </list>
+        </property>
+    </bean>
+    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="properties" ref="properties"/>
+    </bean>
+
+    <!--dataSource-->
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="${jdbc.driverClassName}"/>
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+
+        <property name="validationQuery" value="SELECT 1"/>
+        <property name="testOnReturn" value="false"/>
+        <property name="testOnBorrow" value="true"/>
+        <!--Based on 1000 connected user -->
+        <property name="maxActive" value="10"/>
+        <property name="maxIdle" value="2"/>
+    </bean>
+
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+
+    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
+        <constructor-arg index="0" ref="sqlSessionFactory"/>
+        <constructor-arg index="1" value="BATCH"/>
+    </bean>
+
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="configLocation" value="classpath:mybatis.xml"/>
+    </bean>
+
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.andaily.zhishifenzi.infrastructure.mybatis"/>
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+    </bean>
+
+
+    <!--Mail configuration-->
+    <bean id="javaMailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+        <property name="host" value="${host.name}"/>
+        <property name="port" value="${mail.smtp.port}"/>
+        <property name="username" value="${mail.username}"/>
+        <property name="password" value="${mail.password}"/>
+        <property name="defaultEncoding" value="UTF-8"/>
+        <property name="javaMailProperties">
+            <props>
+                <prop key="mail.smtp.auth">${mail.smtp.auth}</prop>
+                <prop key="mail.smtp.socketFactory.class">javax.net.ssl.SSLSocketFactory</prop>
+            </props>
+        </property>
+    </bean>
+
+    <bean class="com.andaily.zhishifenzi.infrastructure.mail.MailTransmitter">
+        <property name="defaultMailSender" ref="javaMailSender"/>
+        <property name="defaultFromAddress" value="${default.mail.address}"/>
+        <property name="developEmailAddress" value="${mail.develop.address}"/>
+        <property name="developEnvironment" value="${mail.develop.environment}"/>
+        <property name="sendMailUseThread" value="${mail.send.use.thread}"/>
+    </bean>
+
+
+    <!--aop-->
+    <aop:config>
+        <aop:advisor advice-ref="applicationAdvisor" pointcut="execution(* com.andaily.zhishifenzi.service.*.*(..))"/>
+    </aop:config>
+
+    <!--advisor-->
+    <tx:advice id="applicationAdvisor" transaction-manager="transactionManager">
+        <tx:attributes>
+            <tx:method name="*" propagation="REQUIRED"/>
+            <tx:method name="load*" propagation="SUPPORTS" read-only="true"/>
+            <tx:method name="is*" propagation="SUPPORTS" read-only="true"/>
+        </tx:attributes>
+    </tx:advice>
+
+
+    <!--File warehouse -->
+    <bean id="fileWarehouse" class="com.andaily.zhishifenzi.infrastructure.file.DiskFileWarehouse">
+        <property name="diskRootPath" value="${disk.root.path}"/>
+    </bean>
+
+    <!--Qiniu cloud server configuration -->
+    <bean id="backendQiniuUtils" class="com.andaily.zhishifenzi.infrastructure.qiniu.QiniuUtils">
+        <property name="accessKey" value="${qiniu.access_key}"/>
+        <property name="secretKey" value="${qiniu.secret_key}"/>
+        <property name="host" value="${qiniu.host}"/>
+        <property name="bucket" value="${qiniu.bucket}"/>
+        <property name="applicationHost" value="${application.host}"/>
+    </bean>
+
+
+    <bean class="com.andaily.zhishifenzi.domain.shared.Application">
+        <property name="host" value="${application.host}"/>
+    </bean>
+
+</beans>

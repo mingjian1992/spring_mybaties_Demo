@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testng-results skipped="0" failed="0" total="1" passed="1">
+  <reporter-output>
+  </reporter-output>
+  <suite name="Default suite" duration-ms="128" started-at="2016-11-02T16:45:38Z" finished-at="2016-11-02T16:45:38Z">
+    <groups>
+    </groups>
+    <test name="Default test" duration-ms="128" started-at="2016-11-02T16:45:38Z" finished-at="2016-11-02T16:45:38Z">
+      <class name="com.andaily.zhishifenzi.infrastructure.PasswordHandlerTest">
+        <test-method status="PASS" signature="testDecryptReversiblePassword()" name="testDecryptReversiblePassword" duration-ms="114" started-at="2016-11-02T16:45:38Z" finished-at="2016-11-02T16:45:38Z">
+        </test-method>
+      </class>
+    </test>
+  </suite>
+</testng-results>

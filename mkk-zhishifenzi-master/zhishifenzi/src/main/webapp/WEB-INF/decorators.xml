@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<decorators defaultdir="/WEB-INF/jsp/decorators">
+
+    <!--backend_main decorator-->
+    <decorator name="backend_main" page="backend_main.jsp">
+        <pattern>/b/*</pattern>
+    </decorator>
+
+    <!--main decorator-->
+    <decorator name="main" page="main.jsp">
+        <pattern>/*</pattern>
+    </decorator>
+
+
+    <excludes>
+        <pattern>/index.zsfz*</pattern>
+        <pattern>/go_login.zsfz*</pattern>
+
+        <pattern>/resources/**</pattern>
+        <pattern>/player_info/**</pattern>
+        <pattern>/match_photos/**</pattern>
+    </excludes>
+
+</decorators>

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+                        http://www.springframework.org/schema/security
+                        http://www.springframework.org/schema/security/spring-security-3.1.xsd">
+
+    <!--<debug/>-->
+
+    <!--static url pattern-->
+    <http pattern="/resources/**" security="none"/>
+    <http pattern="/public/**" security="none"/>
+    <http pattern="/go_login.zsfz*" security="none"/>
+
+
+    <http auto-config="true" authentication-manager-ref="authenticationManager"
+          access-denied-page="/go_login.zsfz?error=2">
+
+        <!--match roles-->
+        <intercept-url pattern="/b/match/form/**" access="ROLE_ADMIN,ROLE_CAPTAIN,ROLE_COACH"/>
+        <intercept-url pattern="/b/match/archive/**" access="ROLE_ADMIN,ROLE_CAPTAIN,ROLE_COACH"/>
+
+        <intercept-url pattern="/b/match_notice/form/**" access="ROLE_ADMIN,ROLE_CAPTAIN,ROLE_COACH"/>
+        <intercept-url pattern="/b/match_notice/archive/**" access="ROLE_ADMIN,ROLE_CAPTAIN,ROLE_COACH"/>
+        <intercept-url pattern="/b/match_notice/publish/**" access="ROLE_ADMIN,ROLE_CAPTAIN,ROLE_COACH"/>
+        <intercept-url pattern="/b/match_notice/cancel/**" access="ROLE_ADMIN,ROLE_CAPTAIN,ROLE_COACH"/>
+
+        <!--season roles-->
+        <intercept-url pattern="/b/season.zsfz*" access="ROLE_ADMIN,ROLE_CAPTAIN,ROLE_COACH"/>
+        <intercept-url pattern="/b/season/**" access="ROLE_ADMIN,ROLE_CAPTAIN,ROLE_COACH"/>
+
+        <!--club roles-->
+        <intercept-url pattern="/b/club/form/**" access="ROLE_ADMIN,ROLE_CAPTAIN,ROLE_COACH"/>
+        <intercept-url pattern="/b/club/archive/**" access="ROLE_ADMIN,ROLE_CAPTAIN,ROLE_COACH"/>
+
+        <!--album roles-->
+        <intercept-url pattern="/b/album/form/**" access="ROLE_ADMIN,ROLE_CAPTAIN"/>
+        <intercept-url pattern="/b/album/archive/**" access="ROLE_ADMIN,ROLE_CAPTAIN"/>
+        <intercept-url pattern="/b/album/manage/**" access="ROLE_ADMIN,ROLE_CAPTAIN"/>
+
+        <intercept-url pattern="/b/album/front_photos.zsfz*" access="ROLE_ADMIN"/>
+        <intercept-url pattern="/b/album/front_form/**" access="ROLE_ADMIN"/>
+
+        <!--player roles-->
+        <intercept-url pattern="/b/player/form/**" access="ROLE_ADMIN,ROLE_CAPTAIN,ROLE_COACH"/>
+        <intercept-url pattern="/b/player/archive/**" access="ROLE_ADMIN,ROLE_CAPTAIN,ROLE_COACH"/>
+        <intercept-url pattern="/b/player/account/**" access="ROLE_ADMIN,ROLE_CAPTAIN"/>
+
+        <!--stadium roles-->
+        <intercept-url pattern="/b/stadium/form/**" access="ROLE_ADMIN,ROLE_CAPTAIN"/>
+        <intercept-url pattern="/b/stadium/archive/**" access="ROLE_ADMIN,ROLE_CAPTAIN"/>
+
+        <!--system roles-->
+        <intercept-url pattern="/b/system/**" access="ROLE_ADMIN"/>
+
+
+        <intercept-url pattern="/b/**" access="IS_AUTHENTICATED_FULLY"/>
+
+        <custom-filter ref="wdcyRememberMeFilter" before="FORM_LOGIN_FILTER"/>
+        <form-login authentication-failure-url="/go_login.zsfz?error=1"
+                    authentication-success-handler-ref="wdcyAuthenticationSuccessHandler"
+                    login-processing-url="/signin" login-page="/go_login.zsfz"/>
+
+        <logout logout-success-url="/index.zsfz" logout-url="/signout"/>
+    </http>
+
+    <beans:bean id="wdcyAuthenticationSuccessHandler"
+                class="com.andaily.zhishifenzi.web.context.WdcyAuthenticationSuccessHandler"/>
+
+    <beans:bean id="wdcyRememberMeFilter" class="com.andaily.zhishifenzi.web.context.WdcyRememberMeFilter"/>
+
+    <authentication-manager id="authenticationManager">
+        <authentication-provider user-service-ref="userService">
+            <password-encoder hash="md5"/>
+        </authentication-provider>
+    </authentication-manager>
+
+    <!--security holder-->
+    <beans:bean id="springSecurityHolder" class="com.andaily.zhishifenzi.web.context.SpringSecurityHolder"/>
+
+    <beans:bean id="securityHolderFactory" class="com.andaily.zhishifenzi.domain.shared.security.SecurityUtils">
+        <beans:property name="securityHolder" ref="springSecurityHolder"/>
+    </beans:bean>
+
+</beans:beans>

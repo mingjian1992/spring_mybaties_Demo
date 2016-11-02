@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.andaily.zhishifenzi.infrastructure.mybatis.UserRepositoryMyBatis">
+
+    <resultMap type="User" id="userMap">
+        <id property="id" column="id"/>
+        <result property="guid" column="guid"/>
+        <result property="archived" column="archived"/>
+        <result property="createTime" column="create_time"/>
+
+        <result property="defaultUser" column="default_user"/>
+
+        <result property="password" column="password"/>
+        <result property="username" column="username"/>
+        <result property="lastLoginTime" column="last_login_time"/>
+
+        <result property="userRole" column="user_role"/>
+        <result property="status" column="status"/>
+        <result property="others" column="others"/>
+
+        <discriminator column="type_" javaType="String">
+            <case value="PlayerUser" resultMap="playerUserMap"/>
+        </discriminator>
+    </resultMap>
+
+    <resultMap type="User" id="userSimpleMap">
+        <id property="id" column="id"/>
+        <result property="guid" column="guid"/>
+        <result property="createTime" column="create_time"/>
+
+        <result property="username" column="username"/>
+
+        <result property="userRole" column="user_role"/>
+        <result property="status" column="status"/>
+        <result property="others" column="others"/>
+    </resultMap>
+
+    <resultMap type="PlayerUser" id="playerUserMap" extends="userMap">
+        <association property="player" column="player_id"
+                     select="com.andaily.zhishifenzi.infrastructure.mybatis.PlayerRepositoryMyBatis.findPlayerById"/>
+    </resultMap>
+
+
+    <select id="findByGuid" parameterType="String" resultMap="userMap">
+         select * from user_ where  guid = #{guid}
+	</select>
+
+    <select id="findPlayerUser" parameterType="String" resultMap="playerUserMap">
+         select u.* from user_ u, player p
+         where  p.id = u.player_id
+         and u.archived = 0
+         and p.guid = #{playerGuid}
+	</select>
+
+    <select id="findSimpleUsers" resultMap="userSimpleMap">
+         select * from user_
+         where archived = 0
+         and default_user = 0
+         and status = 'ENABLED'
+	</select>
+
+    <select id="findAvailableUsers" resultMap="userMap">
+         select * from user_
+         where archived = 0
+         and default_user = 0
+         and status = 'ENABLED'
+	</select>
+
+    <select id="findUsersByGuids" resultMap="userSimpleMap">
+        select * from user_
+        where archived = 0
+        and guid in
+        <foreach collection="guids" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="findUserById" parameterType="Integer" resultMap="userMap">
+         select * from user_ where id = #{id}
+	</select>
+
+    <select id="findByUsername" parameterType="String" resultMap="userMap">
+         select * from user_
+         where username = #{username}
+         and archived = 0
+	</select>
+
+    <select id="findUserByUsername" parameterType="String" resultMap="userMap">
+         select * from user_
+         where username = #{username}
+	</select>
+
+    <select id="findOverviewUsers" parameterType="map" resultMap="userMap">
+        select u.* from user_ u
+        where u.archived = 0
+        <if test="username != null">
+            and u.username like #{username}
+        </if>
+        order by u.create_time desc
+        limit #{startIndex}, #{perPageSize}
+    </select>
+
+    <select id="totalOverviewUsers" parameterType="map" resultType="int">
+        select count(u.id) from user_ u
+        where u.archived = 0
+        <if test="username != null">
+            and u.username like #{username}
+        </if>
+    </select>
+
+    <insert id="saveUser" parameterType="User" useGeneratedKeys="true" keyProperty="id">
+        insert into user_(guid,archived,create_time,password,
+        username, last_login_time, user_role,
+        status, others)
+        values
+        (#{guid},#{archived},#{createTime},#{password},
+        #{username}, #{lastLoginTime}, #{userRole},
+        #{status}, #{others})
+    </insert>
+
+    <insert id="savePlayerUser" parameterType="PlayerUser" useGeneratedKeys="true" keyProperty="id">
+        insert into user_(guid,archived,create_time,password,
+        username, last_login_time, user_role,
+        status, others, type_, player_id)
+        values
+        (#{guid},#{archived},#{createTime},#{password},
+        #{username}, #{lastLoginTime}, #{userRole},
+        #{status}, #{others},  'PlayerUser', #{player.id})
+    </insert>
+
+    <update id="updateUser" parameterType="User" flushCache="true">
+        update user_ set
+        username = #{username},
+        password = #{password},
+        user_role = #{userRole},
+        status = #{status},
+        others = #{others}
+        where guid = #{guid}
+    </update>
+
+    <update id="archiveUser" flushCache="true">
+        update user_ set
+        archived = #{archived}
+        where guid = #{guid}
+    </update>
+
+    <update id="updateLastLoginTime" flushCache="true">
+        update user_ set
+        last_login_time = now()
+        where guid = #{userGuid}
+    </update>
+
+</mapper>

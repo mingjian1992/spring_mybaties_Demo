@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+    <settings>
+        <setting name="lazyLoadingEnabled" value="false"/>
+        <setting name="useGeneratedKeys" value="true"/>
+    </settings>
+    <typeAliases>
+        <typeAlias alias="User" type="com.andaily.zhishifenzi.domain.user.User"/>
+        <typeAlias alias="PlayerUser" type="com.andaily.zhishifenzi.domain.user.PlayerUser"/>
+        <typeAlias alias="GeckoFile" type="com.andaily.zhishifenzi.domain.commons.GeckoFile"/>
+
+        <typeAlias alias="Photo" type="com.andaily.zhishifenzi.domain.commons.Photo"/>
+        <typeAlias alias="Player" type="com.andaily.zhishifenzi.domain.player.Player"/>
+        <typeAlias alias="Album" type="com.andaily.zhishifenzi.domain.album.Album"/>
+
+        <typeAlias alias="Club" type="com.andaily.zhishifenzi.domain.club.Club"/>
+        <typeAlias alias="Stadium" type="com.andaily.zhishifenzi.domain.stadium.Stadium"/>
+        <typeAlias alias="Season" type="com.andaily.zhishifenzi.domain.match.Season"/>
+
+        <typeAlias alias="Goal" type="com.andaily.zhishifenzi.domain.match.Goal"/>
+        <typeAlias alias="MatchNotice" type="com.andaily.zhishifenzi.domain.match.MatchNotice"/>
+        <typeAlias alias="Match" type="com.andaily.zhishifenzi.domain.match.Match"/>
+
+        <typeAlias alias="MatchPlayer" type="com.andaily.zhishifenzi.domain.match.MatchPlayer"/>
+        <typeAlias alias="Log" type="com.andaily.zhishifenzi.domain.log.Log"/>
+        <typeAlias alias="GlobalSetting" type="com.andaily.zhishifenzi.domain.commons.GlobalSetting"/>
+
+
+        <!--DTO alias-->
+        <typeAlias alias="GoalDto" type="com.andaily.zhishifenzi.domain.dto.statistics.GoalDto"/>
+        <typeAlias alias="AssistantDto" type="com.andaily.zhishifenzi.domain.dto.statistics.AssistantDto"/>
+        <typeAlias alias="SingleMatchPlayerDataDto" type="com.andaily.zhishifenzi.domain.dto.statistics.SingleMatchPlayerDataDto"/>
+
+        <typeAlias alias="MatchScoreDiffDto" type="com.andaily.zhishifenzi.domain.dto.statistics.MatchScoreDiffDto"/>
+
+    </typeAliases>
+
+    <mappers>
+        <mapper resource="com/andaily/zhishifenzi/infrastructure/mybatis/UserMapper.xml"/>
+        <mapper resource="com/andaily/zhishifenzi/infrastructure/mybatis/CommonsMapper.xml"/>
+
+        <mapper resource="com/andaily/zhishifenzi/infrastructure/mybatis/PlayerMapper.xml"/>
+        <mapper resource="com/andaily/zhishifenzi/infrastructure/mybatis/AlbumMapper.xml"/>
+
+        <mapper resource="com/andaily/zhishifenzi/infrastructure/mybatis/ClubMapper.xml"/>
+        <mapper resource="com/andaily/zhishifenzi/infrastructure/mybatis/StadiumMapper.xml"/>
+
+        <mapper resource="com/andaily/zhishifenzi/infrastructure/mybatis/SeasonMapper.xml"/>
+        <mapper resource="com/andaily/zhishifenzi/infrastructure/mybatis/MatchMapper.xml"/>
+
+        <mapper resource="com/andaily/zhishifenzi/infrastructure/mybatis/LogMapper.xml"/>
+        <mapper resource="com/andaily/zhishifenzi/infrastructure/mybatis/StatisticsMapper.xml"/>
+
+
+    </mappers>
+
+</configuration>
